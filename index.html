@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Lírios para Você</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #000000, #fff0f0, #7c0a02);
+      font-family: 'Georgia', serif;
+      overflow: hidden;
+      height: 100vh;
+      position: relative;
+    }
+
+    .envelope {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 130px;
+      background: #8b0000;
+      border-radius: 5px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      cursor: pointer;
+      z-index: 10;
+      overflow: hidden;
+      transition: opacity 1s ease;
+    }
+
+    .envelope .top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200px;
+      height: 65px;
+      background: #a30000;
+      transform-origin: top center;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transition: transform 1s ease;
+    }
+
+    .envelope.aberto .top {
+      transform: rotateX(180deg);
+    }
+
+    .poema {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 75vw;
+      max-width: 600px;
+      background: rgba(20, 10, 10, 0.85);
+      color: #e8e6e3;
+      padding: 25px 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      font-family: 'Georgia', serif;
+      font-size: 1.2em;
+      text-align: justify;
+      line-height: 1.5em;
+      border: 1px solid #6e1f1f;
+      opacity: 0;
+      z-index: 5;
+      transition: opacity 1.5s ease;
+    }
+
+    .poema.mostrar {
+      opacity: 1;
+    }
+
+    .flor {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background-image: url('lirios/lirios.png');
+      background-size: cover;
+      animation: cair 8s linear forwards;
+      opacity: 1;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    @keyframes cair {
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+      }
+      80% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .assinaturas {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-family: 'Georgia', serif;
+      color: #4d1f1f;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 1;
+      transition: opacity 1s ease;
+    }
+
+    .assinaturas.ocultar {
+      opacity: 0;
+    }
+
+    .assinaturas .dedicatoria {
+      font-size: 1.1em;
+      margin-bottom: 4px;
+    }
+
+    .assinaturas .autor {
+      font-size: 0.9em;
+      color: #6e2e2e;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="musica" src="lirios/cigarette_daydreams.mp3" preload="auto"></audio>
+
+  <div class="envelope" onclick="abrirEnvelope()">
+    <div class="top"></div>
+  </div>
+
+  <div id="poema" class="poema">
+    Dizem que alguns lírios nascem já vermelhos, como se soubessem do peso de existir. Dostoiévski escreveria sobre eles, como escreve sobre almas que sangram em silêncio. Não pedem luz, mas a carregam — com a ternura de quem já caiu mil vezes, e ainda assim desabrocha, no coração de um campo que ninguém ousou pisar.
+  </div>
+
+  <div id="assinaturas" class="assinaturas">
+    <div class="dedicatoria">De José Oli para Aline</div>
+    <div class="autor">Oli Dev.</div>
+  </div>
+
+  <script>
+    function abrirEnvelope() {
+      const envelope = document.querySelector('.envelope');
+      const poema = document.getElementById('poema');
+      const assinaturas = document.getElementById('assinaturas');
+      const musica = document.getElementById('musica');
+
+      envelope.classList.add('aberto');
+
+      setTimeout(() => {
+        envelope.style.opacity = '0';
+        assinaturas.classList.add('ocultar');
+      }, 900);
+
+      setTimeout(() => {
+        envelope.style.display = 'none';
+        poema.classList.add('mostrar');
+        iniciarFlores();
+        iniciarMusica(musica);
+      }, 1500);
+    }
+
+    function iniciarFlores() {
+      setInterval(() => {
+        const flor = document.createElement('div');
+        flor.className = 'flor';
+        flor.style.left = Math.random() * 100 + 'vw';
+        flor.style.animationDuration = (6 + Math.random() * 4) + 's';
+        document.body.appendChild(flor);
+        setTimeout(() => {
+          flor.remove();
+        }, 10000);
+      }, 500);
+    }
+
+    function iniciarMusica(audio) {
+      audio.volume = 0;
+      audio.play();
+      const fade = setInterval(() => {
+        if (audio.volume < 0.9) {
+          audio.volume = Math.min(audio.volume + 0.01, 1);
+        } else {
+          clearInterval(fade);
+        }
+      }, 200);
+    }
+  </script>
+
+</body>
+</html>
